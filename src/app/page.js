@@ -1,41 +1,23 @@
 // src/app/page.js
-// 'use client'; // لا نحتاج 'use client' هنا إذا كانت كل المكونات الفرعية تتعامل مع حالتها الخاصة
-
-// import { useEffect } from 'react'; // إذا أردت console.log
 import NewsTicker from './components/NewsTicker';
 import TopSection from './components/TopSection';
-import NewsItem from './components/NewsItem';
 import Sidebar from './components/Sidebar';
-
-// استيراد البيانات من ملف lib
-import { otherNewsData } from '@/lib/newsData';
+import SectionHeader from './components/SectionHeader'; // استيراد المكون الجديد
+import NewsTabs from './components/NewsTabs';     // استيراد المكون الجديد
 
 export default function HomePage() {
-  // useEffect(() => {
-  //   console.log("موقع أخبار الكوله اليوم (Next.js) جاهز ويعمل!");
-  // }, []);
-
   return (
-    <> {/* استخدام Fragment لتجنب div إضافي غير ضروري */}
+    <>
       <NewsTicker />
-      <div className="main-content container">
-        <main>
-          <TopSection />
-          {otherNewsData.map(news => (
-            <NewsItem
-              key={news.id}
-              id={news.id} // تمرير id
-              title={news.title}
-              imageUrl={news.imageUrl}
-              alt={news.alt}
-              summary={news.summary}
-              category={news.category}
-              link={news.link}
-            />
-          ))}
-        </main>
-        {/* Sidebar سيأخذ بياناته من newsData.js مباشرة الآن */}
-        <Sidebar />
+      {/* .container يحيط بالمحتوى الرئيسي الذي ينقسم */}
+      <div className="main-content container"> {/* .main-content هو flex column */}
+        <TopSection />
+        <SectionHeader title="أحدث الأخبار" /> {/* عنوان مع شريط البحث */}
+
+        <div className="lower-content-area"> {/* هذا هو flex row للمحتوى السفلي */}
+          <NewsTabs /> {/* هذا سيكون <main> في CSS */}
+          <Sidebar />
+        </div>
       </div>
     </>
   );

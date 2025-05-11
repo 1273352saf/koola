@@ -9,8 +9,8 @@ body {
     direction: rtl; /* Right-to-left */
     line-height: 1.6;
     padding-top: 70px; /* Add padding to body to prevent content jump below sticky header */
-    -webkit-font-smoothing: antialiased; /* تحسين عرض الخطوط */
-    -moz-osx-font-smoothing: grayscale; /* تحسين عرض الخطوط */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 *, *:before, *:after {
@@ -27,7 +27,7 @@ a:hover {
 }
 
 img,
-svg, /* إضافة لدعم next/image بشكل أفضل في بعض الحالات */
+svg,
 video {
     max-width: 100%;
     height: auto;
@@ -144,7 +144,7 @@ header nav ul li a:hover {
     font-size: 0.95em;
     animation: ticker-scroll 25s linear infinite; /* Adjusted duration */
     transition: opacity 0.3s ease-in-out; /* Add transition for text change */
-    will-change: transform, opacity; /* تحسين أداء الأنيميشن */
+    will-change: transform, opacity;
 }
 
 /* Simple Right-to-Left Scroll Animation */
@@ -153,41 +153,112 @@ header nav ul li a:hover {
     100% { transform: translateX(-150%); } /* End further off-screen left to ensure gap */
 }
 
-
 /* Main Content Area */
 .main-content {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping for responsiveness */
-    gap: 20px;
+    flex-direction: column; /* Changed from row to column */
+    gap: 0; /* Control spacing with padding/margin on children */
     padding-top: 60px; /* Adjusted padding to account for ticker height */
     padding-bottom: 20px;
+    /* No longer needs to be a flex container itself for main/sidebar split */
 }
 
-main {
-    flex: 3; /* Main content takes more space */
-    min-width: 0; /* Prevent flex items from overflowing */
+
+/* Section Header Container (Title + Search) */
+.section-header-container {
     display: flex;
-    flex-direction: column; /* Stack top-section and news items vertically */
+    justify-content: space-between; /* Push title and search apart */
+    align-items: center; /* Vertically center items */
+    margin-bottom: 20px; /* Space below the header */
+    padding: 0; /* Removed container padding, rely on parent .container */
+    width: 100%; /* Ensure it takes full width within its parent .container */
 }
 
+.section-header-container .section-title { /* Style for h2 within this container */
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    white-space: nowrap;
+    margin-left: 15px; /* Space in RTL */
+    font-size: 1.8em; /* Consistent section title size */
+    color: #333;
+    /* border-bottom: 2px solid #d9534f; Re-added from bottom of original CSS */
+}
+
+.search-bar-container {
+    display: flex;
+    flex-grow: 1; /* Allow search bar to take remaining space */
+    max-width: 400px; /* Optional: Max width for search bar */
+}
+
+.search-input {
+    flex-grow: 1; /* Input field takes most space */
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px; /* Rounded corners on the right (RTL) */
+    font-family: inherit;
+    font-size: 0.95em;
+    border-left: none; /* Remove border between input and button */
+}
+
+.search-button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+    border-radius: 0 4px 4px 0; /* Rounded corners on the left (RTL) */
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+/* Container for the main feed and sidebar below the top section */
+.lower-content-area {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    gap: 20px; /* Space between main feed and sidebar */
+    padding: 0; /* Removed padding, rely on parent .container */
+    width: 100%; /* Ensure it takes full width */
+    align-items: flex-start; /* Align items to the top */
+}
+
+/* Main news feed area */
+#main-news-feed { /* This will be the <main> element for tabs */
+    flex: 1; /* Takes more space than sidebar */
+    min-width: 0; /* Prevent flex items from overflowing */
+    display: flex; /* Added for new structure */
+    flex-direction: column; /* Stack tabs-nav and tabs-content */
+}
+
+/* Sidebar moved below top-section */
 .sidebar {
-    flex: 1; /* Sidebar takes less space */
+    flex-basis: 300px; /* Give sidebar a fixed base width */
+    flex-shrink: 0; /* Prevent sidebar from shrinking */
+    flex-grow: 0; /* Prevent sidebar from growing */
     background-color: #ffffff;
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    align-self: flex-start; /* Align sidebar to the top */
-    min-width: 250px; /* Minimum width for sidebar */
-    /* Order will place it after main in flex row */
+    align-self: flex-start; /* Align sidebar to the top of lower-content-area */
+    /* Make sidebar sticky within its parent column */
+    position: sticky;
+    top: 130px; /* Adjust based on header + ticker height + some gap (70px header + 40px ticker + 20px gap) */
 }
+
 
 /* Top Section (Slider + Live Stream) */
 .top-section {
     display: flex;
     gap: 20px; /* Space between slider and live stream */
-    margin-bottom: 20px; /* Space below the top section */
     height: 350px; /* Set fixed height for the container */
     min-height: 350px; /* Ensure it maintains height */
+    margin-bottom: 20px; /* Add space below the top section */
 }
 
 .slider-container {
@@ -244,10 +315,9 @@ main {
     color: #888;
 }
 
-
 /* Slider Styles */
 #main-slider {
-    position: relative; /* Already set, but good for clarity */
+    position: relative;
     width: 100%;
     height: 100%; /* Fill slider-container height */
     overflow: hidden;
@@ -263,7 +333,7 @@ main {
     opacity: 0;
     transition: opacity 0.8s ease-in-out;
     z-index: 1; /* Default z-index */
-    will-change: opacity; /* تحسين أداء الترانزيشن */
+    will-change: opacity;
 }
 
 #main-slider .slide.active {
@@ -271,7 +341,7 @@ main {
     z-index: 2; /* Active slide on top */
 }
 
-/* #main-slider .slide img { -- next/image سيقوم بهذا الدور
+/* #main-slider .slide img { -- next/image handles this
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -285,11 +355,11 @@ main {
     left: 0;
     right: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
-    padding: 30px 15px 15px 15px; /* More padding at the bottom */
+    padding: 20px 15px 15px 15px; /* Adjusted padding */
     z-index: 3; /* Above the image */
     border-bottom-left-radius: 4px; /* Match container */
     border-bottom-right-radius: 4px; /* Match container */
-    color: #ffffff; /* تأكد من أن لون النص في الأوفرلاي أبيض */
+    color: #ffffff;
 }
 
 .slide-category {
@@ -309,15 +379,14 @@ main {
 }
 
 .slide-headline a {
-    color: #ffffff !important; /* تأكيد أن لون الرابط أبيض */
+    color: #ffffff !important;
     font-weight: bold;
     text-decoration: none;
 }
 .slide-headline a:hover {
      text-decoration: underline;
-     color: #f0f0f0 !important; /* لون أفتح قليلاً عند المرور */
+     color: #f0f0f0 !important;
 }
-
 
 /* News Item Styling (Apply to non-slider/live stream items) */
 .news-item {
@@ -327,11 +396,11 @@ main {
     padding: 15px;
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    /* Remove margin from the last item in a container (like tab panel) */
 }
 
-/* Ensure slider container and live stream don't get default news item styles interfering */
-.news-item.slider-container {
-    /* Already overridden above */
+.tab-panel .news-item:last-child {
+    margin-bottom: 0;
 }
 
 .news-item h2 {
@@ -347,13 +416,13 @@ main {
      color: #0056b3;
 }
 
-.news-image {
+.news-image { /* This class might be applied by next/image if specified */
     margin-bottom: 10px;
     border-radius: 3px;
-    /* object-fit: cover; next/image يتعامل مع هذا عبر style prop */
-    /* height: 200px; next/image سيأخذ الأبعاد من props */
-    width: 100% !important; /* تأكد من أن الصورة تملأ العرض إذا استخدمت width/height props في next/image */
-    object-fit: cover; /* يمكن إضافته هنا كإجراء احتياطي أو لـ img العادية */
+    /* object-fit: cover; next/image handles this via style prop */
+    /* height: 200px;  next/image handles this via props or style on parent */
+    width: 100% !important; /* Ensure it fills width if not using 'fill' */
+    object-fit: cover; /* Good default for non-fill images */
 }
 
 .placeholder-img {
@@ -361,7 +430,6 @@ main {
      filter: grayscale(20%); /* Example: Make placeholder less prominent */
      opacity: 0.9;
 }
-
 
 .news-item p {
     margin-bottom: 10px;
@@ -397,10 +465,10 @@ main {
     color: #777;
     font-size: 0.9em;
 }
-.ad-image { /* سيتم التحكم في أبعاد الصورة من خلال next/image props */
+.ad-image { /* next/image will control this */
     margin: 0 auto 10px auto;
     opacity: 0.7;
-    max-width: 80% !important; /* للتأكد من أن max-width يعمل مع next/image */
+    max-width: 80% !important;
     height: auto !important;
 }
 
@@ -418,6 +486,76 @@ main {
      color: #0056b3;
 }
 
+/* Tabs Styling */
+.tabs-nav {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabs-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.tabs-nav li {
+    margin-left: 5px; /* Space between tabs */
+}
+.tabs-nav li:first-child {
+    margin-right: 0; /* RTL: No margin before first item */
+}
+
+.tab-button {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-bottom: none; /* Remove bottom border for inactive */
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1em;
+    color: #007bff;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+    top: 1px; /* Align with the bottom border of the nav container */
+    white-space: nowrap; /* Prevent tab text from wrapping */
+}
+
+.tab-button:hover {
+    background-color: #e9ecef;
+}
+
+.tab-button.active {
+    background-color: #ffffff; /* White background for active tab */
+    border-color: #dee2e6 #dee2e6 #ffffff; /* Match border, make bottom transparent */
+    color: #333;
+    font-weight: bold;
+}
+
+.tabs-content {
+    /* Container for panels */
+}
+
+.tab-panel {
+    display: none; /* Hide inactive panels */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-top: none; /* Top border is handled by nav */
+    background-color: #ffffff;
+    border-radius: 0 0 4px 4px; /* Bottom corners rounded */
+}
+
+.tab-panel.active {
+    display: block; /* Show active panel */
+}
+.tab-panel > p:first-child { /* Style placeholder text if needed */
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px 0;
+}
 
 /* Footer */
 footer {
@@ -434,19 +572,21 @@ footer p {
 
 /* Responsive Design */
 @media (max-width: 992px) {
-    .main-content {
-        flex-direction: column; /* Stack main and sidebar */
+    .lower-content-area {
+        flex-direction: column; /* Stack main feed and sidebar */
     }
-    main {
-        flex-basis: auto; /* Allow main to take full width */
-        order: 1; /* Show main content first */
+    #main-news-feed {
+        flex-basis: auto; /* Allow main feed to take full width */
+        order: 1; /* Keep main content first */
+        width: 100%;
     }
     .sidebar {
         flex-basis: auto; /* Allow sidebar to take full width */
-        margin-top: 20px;
+        width: 100%; /* Ensure full width when stacked */
+        margin-top: 20px; /* Add space when stacked below tabs */
         order: 2; /* Show sidebar after main */
         align-self: stretch; /* Make sidebar stretch */
-        min-width: unset; /* إزالة الحد الأدنى للعرض */
+        position: static; /* Remove sticky positioning on medium screens */
     }
     .top-section {
          /* Keep row layout for medium screens if possible */
@@ -461,16 +601,16 @@ footer p {
      }
 }
 
-
 @media (max-width: 768px) {
      body {
-        padding-top: 70px; /* Keep padding for fixed header */
+        padding-top: 0; /* Remove padding when header is not sticky */
     }
 
     header#main-header {
         height: auto; /* Allow header to grow if needed */
         min-height: 70px; /* But maintain minimum */
-        position: fixed; /* Keep sticky */
+        position: static; /* Header no longer sticky on small screens */
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Less prominent shadow */
     }
     header .container {
         /* Keep flex row, but allow wrapping */
@@ -499,24 +639,60 @@ footer p {
         margin-right: 8px; /* Restore margin */
     }
 
-
      #news-ticker {
-        top: auto; /* Let it flow below the potentially taller header */
-        position: static; /* Change ticker to static on small screens */
-        height: auto; /* Adjust height */
-        padding: 8px 15px; /* Add padding */
+        /* Keep it static as before for small screens */
+        position: static;
+        height: auto;
+        padding: 8px 15px;
      }
      #ticker-text {
         animation: none; /* Disable scrolling animation */
         white-space: normal; /* Allow text wrapping */
         text-align: center;
         width: 100%; /* Take full width */
+        font-size: 0.9em; /* Adjust font size */
      }
 
+     .main-content {
+        padding-top: 15px; /* Adjust top padding */
+     }
 
-    .main-content {
-        flex-direction: column;
-        padding-top: 10px; /* Reduce top padding when ticker is static */
+     .sidebar {
+         position: static; /* Ensure sidebar is not sticky */
+     }
+
+     .section-header-container {
+        flex-direction: column; /* Stack title and search on small screens */
+        align-items: stretch; /* Make items stretch */
+        gap: 10px; /* Add gap between title and search */
+     }
+     .section-header-container .section-title {
+         text-align: center; /* Center title */
+         margin-left: 0;
+         border-bottom: 2px solid #d9534f; /* Ensure border is visible */
+     }
+     .search-bar-container {
+        max-width: none; /* Allow search to take full width */
+     }
+
+    /* Adjust tab button padding for smaller screens */
+    .tab-button {
+        padding: 8px 10px;
+        font-size: 0.9em;
+    }
+
+    .tabs-nav ul {
+        flex-wrap: wrap; /* Allow tabs to wrap */
+        justify-content: center; /* Center tabs */
+    }
+    .tabs-nav li {
+        margin-left: 3px; /* Reduce space */
+        margin-right: 3px; /* Add space */
+        margin-bottom: 5px; /* Space when wrapped */
+    }
+
+    .lower-content-area {
+        gap: 15px; /* Reduce gap slightly */
     }
 
     .top-section {
@@ -524,10 +700,10 @@ footer p {
         height: auto; /* Auto height */
         min-height: unset;
     }
-    #main-slider { /* السلايدر كحاوية */
+    #main-slider { /* The slider itself */
         height: 250px; /* Adjust slider height for smaller screens */
     }
-    .slider-container { /* حاوية السلايدر إذا كانت منفصلة */
+    .slider-container { /* The article wrapping the slider */
         height: 250px;
     }
     .live-stream-section {
@@ -535,9 +711,8 @@ footer p {
         margin-top: 15px; /* Add space when stacked */
     }
 
-    .news-image {
-       /* height: 150px; next/image props سيتحكمون بهذا */
-       /* يمكن إبقاء هذا إذا أردت التأثير على الصور التي ليست next/image */
+    .news-image { /* For non-fill images */
+       height: 150px;
     }
 
     .slide-headline {
@@ -546,4 +721,13 @@ footer p {
      .slide-content-overlay {
         padding: 20px 10px 10px 10px;
      }
+}
+
+/* Section Title Style - General (used if .section-header-container .section-title isn't specific enough) */
+.section-title {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #d9534f; /* Use theme color */
+    color: #333;
 }
